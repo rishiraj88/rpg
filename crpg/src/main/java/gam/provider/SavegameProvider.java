@@ -15,7 +15,6 @@ import java.nio.file.Path;
 
 public final class SavegameProvider extends GameProvider {
     private static final String saveGameDirectory = "."; // for custom values in future, when needed
-    private boolean forceOverwriteSavegame = false;
 
     /*public static GameConfig loadSavedGameConfig(FileInputStream fileInputStream) {
         String[] loadedKeyValuePair = FlyweightProvider.get(Constants.GAME_CONFIG).toString().split(":");//TODO use file for saved config
@@ -27,8 +26,8 @@ public final class SavegameProvider extends GameProvider {
         String filePath = String.format(System.getProperty("user.dir") + "\\" + saveGameDirectory + "\\savegame%d.dat", savegameOrdinal);//memento
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
             PlayerCharacter player = (PlayerCharacter) ois.readObject();
-            initScene((String) GameConfig.getConfig().get(Constants.FULL_GAME_MAP)); //TODO activeGameConfig.sceneMap
-            initPlayer(null, player.getName()); //TODO activeGameConfig.playerChar
+            initScene((String) GameConfig.getConfig().get(Constants.FULL_GAME_MAP)); // activeGameConfig.sceneMap
+            initPlayer(null, player.getName()); // activeGameConfig.playerChar
             return savegameOrdinal;
         } catch (IOException e) {
             System.out.println("Failed to load the SAVEGAME " + savegameOrdinal + ".");
@@ -43,7 +42,6 @@ public final class SavegameProvider extends GameProvider {
     public int saveGame(PlayerCharacter player) {
         //Map "111100" may also be used, alternatively.
         // Player may be asked for the savegame number when "X" command is issued.
-        forceOverwriteSavegame = false;
         int savegameOrdinal = 1;// valid range: [1,6]
         return saveGameToFile(savegameOrdinal, player);
     }
@@ -52,28 +50,27 @@ public final class SavegameProvider extends GameProvider {
         String filePath = String.format(System.getProperty("user.dir") + "\\" + saveGameDirectory + "\\savegame%d.dat", ordinal);//memento
         File file = Path.of(filePath).toFile();
         boolean createNewFile = !file.exists();
-        if (createNewFile) {
-            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
-                if (ordinal < 7 /*&& createNewFile*/) {
-                    oos.writeObject(player);
-                    return ordinal;
-                } /*else if (ordinal < 7) {
-                saveGameToFile(++ordinal, player);
-            }*/ else if (ordinal == 7) {
-                    forceOverwriteSavegame = true;
-                    filePath = System.getProperty("user.dir") + "\\" + saveGameDirectory + "\\savegame1.dat";//memento
-                    oos.writeObject(player);
-                    return ordinal;
-                }
+        if (ordinal < 7 && createNewFile) {
+            try {
+                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath));
+                oos.writeObject(player);
                 return ordinal;
             } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                return -1;
+                System.out.println("Could not save the game file nicely.");
             }
-        } else {
+        } else if (ordinal < 7) {
             saveGameToFile(++ordinal, player);
+        } else {
+            filePath = System.getProperty("user.dir") + "\\" + saveGameDirectory + "\\savegame1.dat";//memento
+            try {
+                ObjectOutputStream oosForce = new ObjectOutputStream(new FileOutputStream(filePath));
+                oosForce.writeObject(player);
+                oosForce.close();
+                return ordinal;
+            } catch (IOException e) {
+                System.out.println("Could not save the game file nicely.");
+            }
         }
-        return 8;
+        return ordinal;
     }
 }
