@@ -14,8 +14,7 @@ import java.io.ObjectOutputStream;
 import java.nio.file.Path;
 
 public final class SavegameProvider extends GameProvider {
-    private static String saveGameDirectory = "."; // for custom values in future, when needed
-    private static String saveGameFile = "";
+    private static final String saveGameDirectory = "."; // for custom values in future, when needed
     private boolean forceOverwriteSavegame = false;
 
     /*public static GameConfig loadSavedGameConfig(FileInputStream fileInputStream) {
@@ -32,10 +31,11 @@ public final class SavegameProvider extends GameProvider {
             initPlayer(null, player.getName()); //TODO activeGameConfig.playerChar
             return savegameOrdinal;
         } catch (IOException e) {
-            System.out.println("Failed to load the SAVEGAME " + savegameOrdinal + ".");e.printStackTrace();
+            System.out.println("Failed to load the SAVEGAME " + savegameOrdinal + ".");
             return 8;
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            System.out.println("There is a mismatch between savegame data and game models. Use another savegame or start a new game.");
+            return 8;
         }
     }
 
@@ -49,10 +49,12 @@ public final class SavegameProvider extends GameProvider {
     }
 
     private int saveGameToFile(int ordinal, PlayerCharacter player) {
+
         String filePath = String.format(System.getProperty("user.dir") + "\\" + saveGameDirectory + "\\savegame%d.dat", ordinal);//memento
+
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
             File file = Path.of(filePath).toFile();
-            if (ordinal++ < 7 && !file.exists()) {
+            if (ordinal < 7 && !file.exists()) {
                 oos.writeObject(player);
                 //Files.writeString(Path.of(filePath), playerName, StandardOpenOption.CREATE);
                 //String fileData = Files.readString(Path.of(filePath));
@@ -63,7 +65,6 @@ public final class SavegameProvider extends GameProvider {
             } else if (ordinal == 7) {
                 forceOverwriteSavegame = true;
                 filePath = System.getProperty("user.dir") + "\\" + saveGameDirectory + "\\savegame1.dat";//memento
-                //Files.writeString(Path.of(filePath), playerName, StandardOpenOption.WRITE);
                 oos.writeObject(player);
             }
             return ordinal;

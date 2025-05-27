@@ -15,7 +15,7 @@ public class Main {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            GameClient.connectToServer((short) 1);});
+            GameClient.connectToServer();});
         gameClientThread.start();
     }
 }

@@ -1,8 +1,6 @@
 package gam.config;
 
-import gam.Constants;
 import gam.config.base.Config;
-import gam.model.geo.GameMap;
 import gam.provider.FlyweightProvider;
 
 import java.io.FileInputStream;
@@ -17,26 +15,22 @@ public final class GameConfig implements Config {
     static {
         String filePath = System.getProperty("user.dir") + "\\application.properties";
         try (FileInputStream fileInputStream = new FileInputStream(filePath)) {
-            configMap.load(fileInputStream);
-            String[] loadedKeyValuePair = new FlyweightProvider().get(Constants.GAME_CONFIG).toString().split(":");//TODO use file for default config
-            configMap.put(loadedKeyValuePair[0], loadedKeyValuePair[1]);
+
+            // potential extension point //??
+            /*configMap.load(fileInputStream);
+            String[] loadedKeyValuePair = FlyweightProvider.get(Constants.GAME_CONFIG).toString().split(":");//TODO use file for default config
+            configMap.put(loadedKeyValuePair[0], loadedKeyValuePair[1]);*/
+
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            System.out.println("Failed to locate the default configuration file.");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Could not read the default configurations out of the pre-set file.");
         }
     }
 
-    public static GameMap getGameMap() {
+    /*public static GameMap getGameMap() {
         return (GameMap) FlyweightProvider.get(Constants.FULL_GAME_MAP); //flyweight
-    }
-
-    public static String getGameMapInfo() {
-        return "GameMap";
-    }
-    public static String getPlayerConfigInfo() {
-        return FlyweightProvider.getPlayerConfigInfo();
-    }
+    }*/ //??
 
     public static PlayerConfig getPlayerConfig() {
         return FlyweightProvider.getPlayerConfig();
@@ -45,12 +39,12 @@ public final class GameConfig implements Config {
         return _INSTANCE;
     }
 
-    public GameConfig add(String key, String value) {
-        _INSTANCE.configMap.put(key, value);
+    /*public GameConfig add(String key, String value) {
+        configMap.put(key, value);
         return _INSTANCE;
-    }
+    }*/ //?? for loading useful key-value pairs to config from files
 
     public Object get(String key) {
-        return _INSTANCE.configMap.getProperty(key);
+        return configMap.getProperty(key);
     }
 }

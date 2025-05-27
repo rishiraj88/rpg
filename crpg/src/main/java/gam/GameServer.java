@@ -7,7 +7,7 @@ import java.io.Console;
 
 public final class GameServer {
     private static String activeGames = "000000"; // multiple simultaneous games not supported for now, may be supported with this map in future
-    private static Console console = System.console();
+    private static final Console console = System.console();
 
     public void initGamePlay() {
         if (activeGames.contains("0")) { //in savegame map: binary "000000".."111111"
@@ -25,7 +25,7 @@ public final class GameServer {
             System.out.println("Name your player as: "); String playerName = console.readLine();
             if (9 == startNewGame(playerName)) {System.out.println("New game has been loaded. Survive the adventure! ᕕ(⌐■_■)ᕗ ♪♬");return 9;}
         } else if (savegameOrdinal.length() == 1 && "123456".contains(savegameOrdinal)) {
-            return loadSavegame(Integer.valueOf(savegameOrdinal));
+            return loadSavegame(Integer.parseInt(savegameOrdinal));
         } else {
             throw new IllegalStateException("Please make a choice out of: [1, 2, 3, 4, 5, 6, 9]");
         }return 8; // 8 is sentinel for exception and motivates for a retry

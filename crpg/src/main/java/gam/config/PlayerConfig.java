@@ -5,26 +5,13 @@ import gam.model.PlayerCharacter;
 
 public final class PlayerConfig implements Config {
     private static final PlayerConfig _INSTANCE = new PlayerConfig();
-    private static PlayerCharacter prototypePlayer = new PlayerCharacter();
-private String customPlayerName = null;
-
-    public String getCustomPlayerName() {
-        return customPlayerName;
-    }
-
-    public void setCustomPlayerName(String customPlayerName) {
-        this.customPlayerName = customPlayerName;
-    }
-/*static {
-        createNewPlayer(playerName);
-    }*/
-
-   // private WieldConfig wieldConfig = WieldConfig.getConfig();
+    private static final PlayerCharacter prototypePlayer = new PlayerCharacter();
+    private String customPlayerName = null;
 
     public static PlayerCharacter createNewPlayer(String playerName) {
-        PlayerCharacter player = null;
         try {
-            player = prototypePlayer.clone();
+            PlayerCharacter player = prototypePlayer.clone();
+            //??
         /* Wield subtypes include the item types which a player may wield, such as:
         . weapon (melee weapon, long-range (long range action) weapon)
         . armour
@@ -43,5 +30,14 @@ private String customPlayerName = null;
 
     public static PlayerConfig getConfig() {
         return _INSTANCE;
+    }
+    // private WieldConfig wieldConfig = WieldConfig.getConfig(); //?? extension point
+
+    public String getCustomPlayerName() {
+        return customPlayerName;
+    }
+
+    public void setCustomPlayerName(String customPlayerName) {
+        this.customPlayerName = customPlayerName;
     }
 }

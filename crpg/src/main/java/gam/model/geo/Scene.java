@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.Random;
 
 public final class Scene implements Serializable {
-    private int nsIndex = new Random().nextInt(0,5);
-    private int ewIndex = new Random().nextInt(0,5);
-    private Geolocation geospatialCoordinates = new Geolocation(
+    private final int nsIndex = new Random().nextInt(0,5);
+    private final int ewIndex = new Random().nextInt(0,5);
+    private final Geolocation geospatialCoordinates = new Geolocation(
             new Random().nextInt(-400, 400)
             , new Random().nextInt(-400, 400)
             , new Random().nextInt(-400, 400)
