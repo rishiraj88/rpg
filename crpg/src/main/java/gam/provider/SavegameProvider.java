@@ -49,29 +49,31 @@ public final class SavegameProvider extends GameProvider {
     }
 
     private int saveGameToFile(int ordinal, PlayerCharacter player) {
-
         String filePath = String.format(System.getProperty("user.dir") + "\\" + saveGameDirectory + "\\savegame%d.dat", ordinal);//memento
-
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
-            File file = Path.of(filePath).toFile();
-            if (ordinal < 7 && !file.exists()) {
-                oos.writeObject(player);
-                //Files.writeString(Path.of(filePath), playerName, StandardOpenOption.CREATE);
-                //String fileData = Files.readString(Path.of(filePath));
-                //System.out.println("savegame file: " + filePath);
-                //System.out.println("savegame content: " + fileData);
-            } else if (ordinal < 7) {
-                saveGameToFile(ordinal, player);
-            } else if (ordinal == 7) {
-                forceOverwriteSavegame = true;
-                filePath = System.getProperty("user.dir") + "\\" + saveGameDirectory + "\\savegame1.dat";//memento
-                oos.writeObject(player);
+        File file = Path.of(filePath).toFile();
+        boolean createNewFile = !file.exists();
+        if (createNewFile) {
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
+                if (ordinal < 7 /*&& createNewFile*/) {
+                    oos.writeObject(player);
+                    return ordinal;
+                } /*else if (ordinal < 7) {
+                saveGameToFile(++ordinal, player);
+            }*/ else if (ordinal == 7) {
+                    forceOverwriteSavegame = true;
+                    filePath = System.getProperty("user.dir") + "\\" + saveGameDirectory + "\\savegame1.dat";//memento
+                    oos.writeObject(player);
+                    return ordinal;
+                }
+                return ordinal;
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                return -1;
             }
-            return ordinal;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            return -1;
+        } else {
+            saveGameToFile(++ordinal, player);
         }
+        return 8;
     }
 }
