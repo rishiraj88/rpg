@@ -2,6 +2,7 @@ package gam.model;
 
 import gam.model.base.BasePlayerToken;
 import gam.model.geo.Scene;
+import gam.util.IOUtil;
 
 public class PlayerCharacter extends BasePlayerToken {
     private String name = null;
@@ -47,11 +48,11 @@ public class PlayerCharacter extends BasePlayerToken {
         if (0 != x) { // es: East <--> West
             this.getScene().getGeospatialCoordinates().setX(this.getScene().getGeospatialCoordinates().getX() + x);
         }
-        System.out.printf("Player now at: [%d,%d].%n",this.getScene().getGeospatialCoordinates().getY(),this.getScene().getGeospatialCoordinates().getX());
+        IOUtil.display(String.format("Player now at: [%d,%d].%n",this.getScene().getGeospatialCoordinates().getY(),this.getScene().getGeospatialCoordinates().getX()));
     }
 
     public void fight() {
         score++;
-        System.out.println("score: " + score);
+        IOUtil.display("score: " + score);
     }
 }

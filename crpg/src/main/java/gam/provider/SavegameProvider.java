@@ -1,9 +1,9 @@
 package gam.provider;
 
-import gam.Constants;
 import gam.config.GameConfig;
 import gam.model.PlayerCharacter;
 import gam.provider.base.GameProvider;
+import gam.util.IOUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,17 +23,19 @@ public final class SavegameProvider extends GameProvider {
 
     //used in Game Server
     public int loadGame(int savegameOrdinal) {
-        String filePath = String.format(System.getProperty("user.dir") + "\\" + saveGameDirectory + "\\savegame%d.dat", savegameOrdinal);//memento
+        String filePath = String.format(System.getProperty("user.dir") + "\\" + saveGameDirectory + "\\savegame%d.dat", savegameOrdinal);//memento is among best practices for this
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
             PlayerCharacter player = (PlayerCharacter) ois.readObject();
-            initScene((String) GameConfig.getConfig().get(Constants.FULL_GAME_MAP)); // activeGameConfig.sceneMap
-            initPlayer(null, player.getName()); // activeGameConfig.playerChar
+            initScene(player.getScene());
+            initPlayer(GameConfig.getConfig().getPlayerConfig(), player.getName()); // activeGameConfig.playerChar
             return savegameOrdinal;
         } catch (IOException e) {
-            System.out.println("Failed to load the SAVEGAME " + savegameOrdinal + ".");
+            IOUtil.display("Failed to load the SAVEGAME " + savegameOrdinal + ".");
+            e.printStackTrace();
             return 8;
         } catch (ClassNotFoundException e) {
-            System.out.println("There is a mismatch between savegame data and game models. Use another savegame or start a new game.");
+            IOUtil.display("There is a mismatch between savegame data and game models. Use another savegame or start a new game.");
+            e.printStackTrace();
             return 8;
         }
     }
@@ -41,8 +43,8 @@ public final class SavegameProvider extends GameProvider {
     //used in Game Client
     public int saveGame(PlayerCharacter player) {
         //Map "111100" may also be used, alternatively.
-        // Player may be asked for the savegame number when "X" command is issued.
-        int savegameOrdinal = 1;// valid range: [1,6]
+        IOUtil.display("Your wish to save the warrior history as SAVEGAME [1, 2, 3, 4, 5 or 6]: ");
+        int savegameOrdinal = Integer.parseInt(IOUtil.readLine());// valid range: [1,6]
         return saveGameToFile(savegameOrdinal, player);
     }
 
@@ -51,26 +53,25 @@ public final class SavegameProvider extends GameProvider {
         File file = Path.of(filePath).toFile();
         boolean createNewFile = !file.exists();
         if (ordinal < 7 && createNewFile) {
-            try {
-                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath));
-                oos.writeObject(player);
-                return ordinal;
-            } catch (IOException e) {
-                System.out.println("Could not save the game file nicely.");
-            }
+            trySavingGame(filePath, player);
+            return ordinal;
         } else if (ordinal < 7) {
             saveGameToFile(++ordinal, player);
         } else {
             filePath = System.getProperty("user.dir") + "\\" + saveGameDirectory + "\\savegame1.dat";//memento
-            try {
-                ObjectOutputStream oosForce = new ObjectOutputStream(new FileOutputStream(filePath));
-                oosForce.writeObject(player);
-                oosForce.close();
-                return ordinal;
-            } catch (IOException e) {
-                System.out.println("Could not save the game file nicely.");
-            }
+            trySavingGame(filePath, player);
+            return ordinal;
         }
         return ordinal;
+    }
+
+    private void trySavingGame(String filePath, PlayerCharacter player) {
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath));
+            oos.writeObject(player);
+            IOUtil.display("Your glory has been recorded as history, Meister.");
+        } catch (IOException e) {
+            IOUtil.display("Could not save the game file with a victory, Meister.");
+        }
     }
 }

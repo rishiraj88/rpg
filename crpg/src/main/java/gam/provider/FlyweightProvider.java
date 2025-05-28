@@ -1,7 +1,7 @@
 package gam.provider;
 
-import gam.config.PlayerConfig;
 import gam.model.geo.GameMap;
+import gam.util.Factory;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,8 +10,9 @@ import java.util.Properties;
 public final class FlyweightProvider {
     private static final Properties defaultConfig = new Properties();
     //private static WieldConfig wieldConfig = new WieldConfig();//??
-    private static final SavegameProvider savegameProvider= new SavegameProvider();
+    private final SavegameProvider savegameProvider= (SavegameProvider) Factory.get("gam.provider.SavegameProvider");
 
+//??
     FlyweightProvider(String configFileName) {
         //read config file, load data
         try {
@@ -33,16 +34,14 @@ public final class FlyweightProvider {
         return defaultConfig.get(key);
     }
 
-
-    public static gam.config.PlayerConfig getPlayerConfig() {
+    /*public static gam.config.PlayerConfig getPlayerConfig() {
         return PlayerConfig.getConfig();
-    }
+    }*/
 
     /*public static WieldConfig getWieldConfig() {return WieldConfig.getConfig();}*/ //??
-    public static SavegameProvider getSavegameProvider() {
+    public SavegameProvider getSavegameProvider() {
         return savegameProvider;
     }
-
     /*
     public static Wield getWield(String wieldName) {
         return switch (wieldName) {

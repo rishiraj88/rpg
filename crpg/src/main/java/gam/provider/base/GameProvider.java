@@ -1,21 +1,25 @@
 package gam.provider.base;
 
+import gam.config.GameConfig;
 import gam.config.PlayerConfig;
+import gam.model.geo.Scene;
+import gam.util.IOUtil;
 
 public abstract class GameProvider {
 
-    public void initScene(String gameMapInfo) {
-        //Objects and stories may be configured for scene
-        //?? gameMapInfo to load a custom ground (location)
-        System.out.println("Welcome to the rampage! Scene will be presented soon...");
+    public void initScene(Scene sceneInfo) {
+        //Objects and stories configured for scene
+        GameConfig.getConfig().set("scene",sceneInfo); //?? Another strategy: to load a <code>Ground</code> out of <code>GameMap</code>
+
+        IOUtil.display("Welcome to the rampage! Scene will be presented soon...");
     }
 
     public void initPlayer(PlayerConfig playerConfig, String playerName) {
-        // Config with respect to player may be pulled in
+        // Config with respect to player to pull in. Recommended to use for loading a savegame
         if (null == playerConfig) {
-           playerConfig = PlayerConfig.getConfig();
-           playerConfig.setCustomPlayerName(playerName);
-        } else{ ; //?? to load custom config out of configuration file
+           playerConfig = PlayerConfig.getDefaultConfig();
+           playerConfig.createNewPlayer(playerName);
+        } else{ playerConfig.setPlayerName(playerName);
         }
     }
 }

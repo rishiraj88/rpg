@@ -2,13 +2,19 @@ package gam.config;
 
 import gam.config.base.Config;
 import gam.model.PlayerCharacter;
+import gam.util.Factory;
 
 public final class PlayerConfig implements Config {
-    private static final PlayerConfig _INSTANCE = new PlayerConfig();
-    private static final PlayerCharacter prototypePlayer = new PlayerCharacter();
-    private String customPlayerName = null;
+    private static final PlayerConfig _DEFAULT_PLAYER_CONFIG = new PlayerConfig();
+    private static volatile PlayerConfig activePlayerConfig = (PlayerConfig) Factory.get("PlayerConfig",PlayerCharacter.class);
+    private final PlayerCharacter prototypePlayer = (PlayerCharacter) Factory.get("PlayerCharacter");
+    private volatile PlayerCharacter activePlayer = null;
 
-    public static PlayerCharacter createNewPlayer(String playerName) {
+    public static PlayerConfig getActivePlayerConfig() { return activePlayerConfig;
+
+    }
+
+    public final void createNewPlayer(String newPlayerName) {
         try {
             PlayerCharacter player = prototypePlayer.clone();
             //??
@@ -21,23 +27,24 @@ public final class PlayerConfig implements Config {
            /* player.addWield("dagger", (short) 5);
             player.addWield("shotgun", (short) 30);
             player.addWield("rope", (short) 2);*/ //??
-            player.setName(playerName);
-            return player;
+            player.setName(newPlayerName);
+            activePlayer = player;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static PlayerConfig getConfig() {
-        return _INSTANCE;
+    public static PlayerConfig getDefaultConfig() {
+        return _DEFAULT_PLAYER_CONFIG;
+    }public PlayerConfig getConfig() {
+        return activePlayerConfig;
+    }
+
+    public void setPlayerName(String playerName) {activePlayer.setName(playerName);}
+    public String getPlayerName() { return activePlayer.getName();    }
+
+    public PlayerCharacter getPlayer() {return activePlayer;
     }
     // private WieldConfig wieldConfig = WieldConfig.getConfig(); //?? extension point
 
-    public String getCustomPlayerName() {
-        return customPlayerName;
-    }
-
-    public void setCustomPlayerName(String customPlayerName) {
-        this.customPlayerName = customPlayerName;
-    }
 }
