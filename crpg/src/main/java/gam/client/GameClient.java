@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
 public class GameClient {
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     private volatile GameServer gameServer = null;
-    private volatile Commander commander = (Commander) Factory.get("Commander");
+    private volatile Commander commander = (Commander) Factory.get("gam.client.Commander");
     private SavegameProvider savegameProvider;
 
     //to spawn a player token so that a player may start playing
@@ -28,11 +28,11 @@ public class GameClient {
         PlayerConfig.getActivePlayerConfig().createNewPlayer(config.getPlayerName());
     }
 
-    // A Parameter 'short serverPort' may allow for connecting to one of many geme servers running.
+    // A Parameter 'short serverPort' may allow for connecting to one of many game servers running.
     public void connectToServer(GameServer gameServer) {
         this.gameServer = gameServer;
         // create new player on request
-        IOUtil.display("Would you like to create your character now? (˵ ͡° ͜ʖ ͡°˵)\nY/n");
+        IOUtil.display("Would you like to create your character now? (˵ ͡° ͜ʖ ͡°˵)\nY/n");//TODO
         try {
             if ("y".equalsIgnoreCase(reader.readLine().substring(0, 1))) {
                 createNewPlayer();
@@ -61,6 +61,6 @@ public class GameClient {
     }
 
     public SavegameProvider getSavegameProvider() {
-        return this.savegameProvider;
+        return null == this.savegameProvider ? this.savegameProvider = (SavegameProvider) Factory.get("gam.provider.SavegameProvider") : this.savegameProvider;
     }
 }

@@ -1,25 +1,24 @@
 package gam.util;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import gam.provider.FlyweightProvider;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 public class IOUtil {
     public static void display(Object model) {
-
-        try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out))) {
+        try {
+            Writer writer = FlyweightProvider.writer;
             writer.write(model.toString());
+            writer.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static String readLine() {
-        String input = "";
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
-            input = reader.readLine();
+        try {
+            String input = FlyweightProvider.reader.readLine();
             return input;
         } catch (IOException e) {
             throw new RuntimeException(e);

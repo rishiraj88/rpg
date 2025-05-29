@@ -11,9 +11,6 @@ public final class GameServer {
     private final FlyweightProvider flyweightProvider = (FlyweightProvider) Factory.get("gam.provider.FlyweightProvider");
     private volatile String activeGames = "000000"; // multiple simultaneous games not supported for now, may be supported with this map in future
 
-    {
-    }
-
     public void initGamePlay() {
         // Display the list of available savegames to load
         if (activeGames.contains("0")) { //in savegame map: binary "000000".."111111"
@@ -32,8 +29,7 @@ public final class GameServer {
             IOUtil.display("""
                     How about naming your player character by your wish? ¯\\_( ͡° ͜ʖ ͡°)_/¯
                     Name your player as: """);
-            String playerName = "playername";
-            playerName = IOUtil.readLine();
+            String playerName = "playername"; //playerName = IOUtil.readLine();
             if (9 == startNewGame(playerName)) { // plot and start new game
                 IOUtil.display("New game has been loaded. Survive the adventure! ᕕ(⌐■_■)ᕗ ♪♬");
                 return 9;

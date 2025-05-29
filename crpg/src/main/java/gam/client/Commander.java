@@ -8,7 +8,7 @@ import java.io.IOException;
 public class Commander {
     private volatile GameClient gameClient;
 
-     void init(GameClient gameClient, PlayerCharacter playerCharacter) {
+    void init(GameClient gameClient, PlayerCharacter playerCharacter) {
         // config, if required
         this.gameClient = gameClient;
         respondToCommands(playerCharacter);

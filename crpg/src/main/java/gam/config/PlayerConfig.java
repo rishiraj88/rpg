@@ -6,12 +6,16 @@ import gam.util.Factory;
 
 public final class PlayerConfig implements Config {
     private static final PlayerConfig _DEFAULT_PLAYER_CONFIG = new PlayerConfig();
-    private static volatile PlayerConfig activePlayerConfig = (PlayerConfig) Factory.get("PlayerConfig",PlayerCharacter.class);
-    private final PlayerCharacter prototypePlayer = (PlayerCharacter) Factory.get("PlayerCharacter");
+    private static volatile PlayerConfig activePlayerConfig = _DEFAULT_PLAYER_CONFIG;// (PlayerConfig) Factory.get("gam.config.PlayerConfig", PlayerCharacter.class);
+    private final PlayerCharacter prototypePlayer = (PlayerCharacter) Factory.get("gam.model.PlayerCharacter");
     private volatile PlayerCharacter activePlayer = null;
 
-    public static PlayerConfig getActivePlayerConfig() { return activePlayerConfig;
+    public static PlayerConfig getActivePlayerConfig() {
+        return activePlayerConfig;
+    }
 
+    public static PlayerConfig getDefaultConfig() {
+        return _DEFAULT_PLAYER_CONFIG;
     }
 
     public final void createNewPlayer(String newPlayerName) {
@@ -34,17 +38,20 @@ public final class PlayerConfig implements Config {
         }
     }
 
-    public static PlayerConfig getDefaultConfig() {
-        return _DEFAULT_PLAYER_CONFIG;
-    }public PlayerConfig getConfig() {
+    public PlayerConfig getConfig() {
         return activePlayerConfig;
     }
 
-    public void setPlayerName(String playerName) {activePlayer.setName(playerName);}
-    public String getPlayerName() { return activePlayer.getName();    }
+    public String getPlayerName() {
+        return activePlayer.getName();
+    }
 
-    public PlayerCharacter getPlayer() {return activePlayer;
+    public void setPlayerName(String playerName) {
+        activePlayer.setName(playerName);
+    }
+
+    public PlayerCharacter getPlayer() {
+        return activePlayer;
     }
     // private WieldConfig wieldConfig = WieldConfig.getConfig(); //?? extension point
-
 }
