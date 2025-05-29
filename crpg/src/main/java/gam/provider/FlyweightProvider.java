@@ -1,17 +1,23 @@
 package gam.provider;
 
-import gam.config.PlayerConfig;
 import gam.model.geo.GameMap;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.Properties;
 
 public final class FlyweightProvider {
+    public static final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
+    public static final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     private static final Properties defaultConfig = new Properties();
     //private static WieldConfig wieldConfig = new WieldConfig();//??
-    private static final SavegameProvider savegameProvider= new SavegameProvider();
+    private final SavegameProvider savegameProvider = null;
 
+    //??
     FlyweightProvider(String configFileName) {
         //read config file, load data
         try {
@@ -21,7 +27,7 @@ public final class FlyweightProvider {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        defaultConfig.put("FULL_GAME_MAP", new GameMap());
+        defaultConfig.put("FULL_GAME_MAP", new GameMap());//TODO
     }
 
     public FlyweightProvider() {//?? for heavy load conditions
@@ -33,16 +39,14 @@ public final class FlyweightProvider {
         return defaultConfig.get(key);
     }
 
-
-    public static gam.config.PlayerConfig getPlayerConfig() {
+    /*public static gam.config.PlayerConfig getPlayerConfig() {
         return PlayerConfig.getConfig();
-    }
+    }*/
 
     /*public static WieldConfig getWieldConfig() {return WieldConfig.getConfig();}*/ //??
-    public static SavegameProvider getSavegameProvider() {
+    public SavegameProvider getSavegameProvider() {
         return savegameProvider;
     }
-
     /*
     public static Wield getWield(String wieldName) {
         return switch (wieldName) {
