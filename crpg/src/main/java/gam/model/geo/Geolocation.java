@@ -3,8 +3,8 @@ package gam.model.geo;
 import java.io.Serializable;
 
 public class Geolocation implements Serializable {
-    int xPosition, yPosition, zPosition; //?? z-position for climbing and diving
-    public Geolocation(int xPosition, int yPosition, int zPosition) {
+    private int xPosition, yPosition, zPosition; //?? z-position for climbing and diving
+    Geolocation(int xPosition, int yPosition, int zPosition) {
         this.xPosition = xPosition; this.yPosition = yPosition; this.zPosition = zPosition;
     }
 

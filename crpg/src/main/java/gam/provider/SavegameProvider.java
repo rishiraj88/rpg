@@ -14,7 +14,7 @@ import java.io.ObjectOutputStream;
 import java.nio.file.Path;
 
 public final class SavegameProvider extends GameProvider {
-    private static final String saveGameDirectory = "."; // for custom values in future, when needed
+    private final String saveGameDirectory = "."; // for custom values in future, when needed
 
     /*public static GameConfig loadSavedGameConfig(FileInputStream fileInputStream) {
         String[] loadedKeyValuePair = FlyweightProvider.get(Constants.GAME_CONFIG).toString().split(":");//TODO use file for saved config
@@ -27,7 +27,7 @@ public final class SavegameProvider extends GameProvider {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
             PlayerCharacter player = (PlayerCharacter) ois.readObject();
             initScene(player.getScene());
-            initPlayer(GameConfig.getConfig().getPlayerConfig(), player.getName()); // activeGameConfig.playerChar
+            initPlayer(GameConfig.getConfig().getPlayerConfig()); // activeGameConfig.playerChar
             return savegameOrdinal;
         } catch (IOException e) {
             IOUtil.display("Failed to load the SAVEGAME " + savegameOrdinal + ".");
@@ -44,7 +44,9 @@ public final class SavegameProvider extends GameProvider {
     public int saveGame(PlayerCharacter player) {
         //Map "111100" may also be used, alternatively.
         IOUtil.display("Your wish to save the warrior history as SAVEGAME [1, 2, 3, 4, 5 or 6]: ");
-        int savegameOrdinal = Integer.parseInt(IOUtil.readLine());// valid range: [1,6]
+        //int savegameOrdinal = Integer.parseInt(IOUtil.readLine());// valid range: [1,6]
+        int savegameOrdinal = 1;// valid range: [1,6]
+        GameConfig.getConfig().set("playerName",player.getName());
         return saveGameToFile(savegameOrdinal, player);
     }
 

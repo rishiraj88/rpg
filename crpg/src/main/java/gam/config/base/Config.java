@@ -1,5 +1,8 @@
 package gam.config.base;
 
-public interface Config {
+import java.io.Serializable;
+
+public interface Config extends Serializable {
+
 }
 

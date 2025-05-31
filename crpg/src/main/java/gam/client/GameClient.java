@@ -1,7 +1,6 @@
 package gam.client;
 
 import gam.GameServer;
-import gam.config.GameConfig;
 import gam.config.PlayerConfig;
 import gam.model.PlayerCharacter;
 import gam.provider.SavegameProvider;
@@ -17,15 +16,24 @@ public class GameClient {
     private volatile GameServer gameServer = null;
     private volatile Commander commander = (Commander) Factory.get("gam.client.Commander");
     private SavegameProvider savegameProvider;
+    private volatile PlayerCharacter player = null;
+    private PlayerConfig playerConfig = PlayerConfig.getActivePlayerConfig();
 
     //to spawn a player token so that a player may start playing
-    public static void createNewPlayer() {
-        SpawnNewPlayer(GameConfig.getConfig().getPlayerConfig());
-        IOUtil.display(String.format("%s, a new character has been created for a win.", GameConfig.getConfig().getPlayerConfig().getPlayerName()));
+    public PlayerCharacter createNewPlayer() {
+        //PlayerCharacter player = SpawnNewPlayer(GameConfig.getConfig().getPlayerConfig());
+        PlayerCharacter player = SpawnNewPlayer(playerConfig);
+        IOUtil.display(String.format("%s, a new character has been created for a win.", player.getName()));
+        return player;
     }
 
-    private static void SpawnNewPlayer(PlayerConfig config) {
-        PlayerConfig.getActivePlayerConfig().createNewPlayer(config.getPlayerName());
+    private static PlayerCharacter SpawnNewPlayer(PlayerConfig playerConfig) {
+        IOUtil.display("""
+                How about naming your player character by your wish? ¯\\_( ͡° ͜ʖ ͡°)_/¯
+                Name your player as: """);
+        String playerName = "playername";
+        playerName = IOUtil.readLine();
+        return playerConfig.createNewPlayer(playerName);
     }
 
     // A Parameter 'short serverPort' may allow for connecting to one of many game servers running.
@@ -35,12 +43,12 @@ public class GameClient {
         IOUtil.display("Would you like to create your character now? (˵ ͡° ͜ʖ ͡°˵)\nY/n");//TODO
         try {
             if ("y".equalsIgnoreCase(reader.readLine().substring(0, 1))) {
-                createNewPlayer();
+                player = createNewPlayer();
             } else {
                 Thread.sleep(5000);
                 IOUtil.display("Would you like to play soon? (˵ ͡° ͜ʖ ͡°˵)\nY/n");
                 if ("y".equalsIgnoreCase(reader.readLine().substring(0, 1))) {
-                    createNewPlayer();
+                    player = createNewPlayer();
                 } else {
                     System.exit(0);
                 }
@@ -51,13 +59,14 @@ public class GameClient {
             throw new RuntimeException(e);
         }
         //present menus (scene info and available actions)
-        MenuBoard.display(GameConfig.getConfig().getPlayerConfig().getPlayer());
+        MenuBoard menuBoard = (MenuBoard) playerConfig.getMenuBoard();
+        menuBoard.display(player);
         // Respond to input commands
-        initCommander(GameConfig.getConfig().getPlayerConfig().getPlayer());
+        initCommander(player);
     }
 
     private void initCommander(PlayerCharacter player) {
-        new Commander().init(this, GameConfig.getConfig().getPlayerConfig().getPlayer());
+        new Commander().init(this, player);
     }
 
     public SavegameProvider getSavegameProvider() {

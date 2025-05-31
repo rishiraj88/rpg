@@ -1,5 +1,6 @@
 package gam.model;
 
+import gam.config.PlayerConfig;
 import gam.model.base.BasePlayerToken;
 import gam.model.geo.Scene;
 import gam.util.IOUtil;
@@ -9,6 +10,7 @@ public class PlayerCharacter extends BasePlayerToken {
     private final Scene scene = new Scene(); //scene: Map Block (world, ground) + Geospatial Coordinates (x,y,z)
     private String name = null;
     //private final Equipment equipment = new Equipment();//??
+    PlayerConfig playerConfig = null;
 
     @Override
     public PlayerCharacter clone() throws CloneNotSupportedException {

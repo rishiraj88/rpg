@@ -17,7 +17,7 @@ public class Main {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            new GameClient().connectToServer(gameServer);
+            ((GameClient) Factory.get("gam.client.GameClient")).connectToServer(gameServer);
         });
         gameClientThread.start();
     }
