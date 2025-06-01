@@ -2,7 +2,6 @@ package gam.client;
 
 import gam.GameServer;
 import gam.config.PlayerConfig;
-import gam.model.PlayerCharacter;
 import gam.provider.SavegameProvider;
 import gam.util.Factory;
 import gam.util.IOUtil;
@@ -13,27 +12,25 @@ import java.io.InputStreamReader;
 
 public class GameClient {
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    private PlayerConfig playerConfig = PlayerConfig.getDefaultConfig();
+    //tools
     private volatile GameServer gameServer = null;
     private volatile Commander commander = (Commander) Factory.get("gam.client.Commander");
     private SavegameProvider savegameProvider;
-    private volatile PlayerCharacter player = null;
-    private PlayerConfig playerConfig = PlayerConfig.getActivePlayerConfig();
 
-    //to spawn a player token so that a player may start playing
-    public PlayerCharacter createNewPlayer() {
-        //PlayerCharacter player = SpawnNewPlayer(GameConfig.getConfig().getPlayerConfig());
-        PlayerCharacter player = SpawnNewPlayer(playerConfig);
-        IOUtil.display(String.format("%s, a new character has been created for a win.", player.getName()));
-        return player;
+    private static void SpawnNewPlayer(PlayerConfig playerConfig) {
     }
 
-    private static PlayerCharacter SpawnNewPlayer(PlayerConfig playerConfig) {
+    //to spawn a player token so that a player may start playing
+    public void createNewPlayer() {
+        //PlayerCharacter player = SpawnNewPlayer(GameConfig.getConfig().getPlayerConfig());
         IOUtil.display("""
                 How about naming your player character by your wish? ¯\\_( ͡° ͜ʖ ͡°)_/¯
                 Name your player as: """);
         String playerName = "playername";
         playerName = IOUtil.readLine();
-        return playerConfig.createNewPlayer(playerName);
+        //PlayerCharacter player = SpawnNewPlayer(playerName);
+        playerConfig.createNewPlayer(playerName);
     }
 
     // A Parameter 'short serverPort' may allow for connecting to one of many game servers running.
@@ -43,12 +40,12 @@ public class GameClient {
         IOUtil.display("Would you like to create your character now? (˵ ͡° ͜ʖ ͡°˵)\nY/n");//TODO
         try {
             if ("y".equalsIgnoreCase(reader.readLine().substring(0, 1))) {
-                player = createNewPlayer();
+                createNewPlayer();
             } else {
                 Thread.sleep(5000);
                 IOUtil.display("Would you like to play soon? (˵ ͡° ͜ʖ ͡°˵)\nY/n");
                 if ("y".equalsIgnoreCase(reader.readLine().substring(0, 1))) {
-                    player = createNewPlayer();
+                    createNewPlayer();
                 } else {
                     System.exit(0);
                 }
@@ -60,13 +57,13 @@ public class GameClient {
         }
         //present menus (scene info and available actions)
         MenuBoard menuBoard = (MenuBoard) playerConfig.getMenuBoard();
-        menuBoard.display(player);
+        menuBoard.display(playerConfig);
         // Respond to input commands
-        initCommander(player);
+        initCommander(playerConfig);
     }
 
-    private void initCommander(PlayerCharacter player) {
-        new Commander().init(this, player);
+    private void initCommander(PlayerConfig playerConfig) {
+        new Commander().init(this, playerConfig);
     }
 
     public SavegameProvider getSavegameProvider() {

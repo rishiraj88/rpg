@@ -1,7 +1,6 @@
 package gam.provider;
 
 import gam.config.base.Config;
-import gam.model.geo.GameMap;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -26,12 +25,14 @@ public final class FlyweightProvider {
         System.out.println("filepath: "+filePath);
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
             defaultConfig = (ConcurrentHashMap<String, Object>) ois.readObject();
+            // PlayerConfig
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("Missing some config objects in file 'game.config'");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        defaultConfig.put("FULL_GAME_MAP", new GameMap());//TODO
+//        defaultConfig.put("FULL_GAME_MAP", new GameMap());//TODO
     }
 
     public FlyweightProvider() {//?? for heavy load conditions

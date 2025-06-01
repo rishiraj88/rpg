@@ -1,7 +1,7 @@
 package gam.provider;
 
 import gam.config.GameConfig;
-import gam.model.PlayerCharacter;
+import gam.config.PlayerConfig;
 import gam.provider.base.GameProvider;
 import gam.util.IOUtil;
 
@@ -25,8 +25,8 @@ public final class SavegameProvider extends GameProvider {
     public int loadGame(int savegameOrdinal) {
         String filePath = String.format(System.getProperty("user.dir") + "\\" + saveGameDirectory + "\\savegame%d.dat", savegameOrdinal);//memento is among best practices for this
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
-            PlayerCharacter player = (PlayerCharacter) ois.readObject();
-            initScene(player.getScene());
+            PlayerConfig playerConfig = (PlayerConfig) ois.readObject();
+            initScene(playerConfig.getPlayerPosition());
             initPlayer(GameConfig.getConfig().getPlayerConfig()); // activeGameConfig.playerChar
             return savegameOrdinal;
         } catch (IOException e) {
@@ -41,36 +41,36 @@ public final class SavegameProvider extends GameProvider {
     }
 
     //used in Game Client
-    public int saveGame(PlayerCharacter player) {
+    public int saveGame(PlayerConfig playerConfig) {//TODO to implement with PlayerConfig parameter type
         //Map "111100" may also be used, alternatively.
         IOUtil.display("Your wish to save the warrior history as SAVEGAME [1, 2, 3, 4, 5 or 6]: ");
         //int savegameOrdinal = Integer.parseInt(IOUtil.readLine());// valid range: [1,6]
         int savegameOrdinal = 1;// valid range: [1,6]
-        GameConfig.getConfig().set("playerName",player.getName());
-        return saveGameToFile(savegameOrdinal, player);
+        GameConfig.getConfig().set("playerName",playerConfig.getPlayer().getName());
+        return saveGameToFile(savegameOrdinal, playerConfig);
     }
 
-    private int saveGameToFile(int ordinal, PlayerCharacter player) {
+    private int saveGameToFile(int ordinal, PlayerConfig playerConfig) {
         String filePath = String.format(System.getProperty("user.dir") + "\\" + saveGameDirectory + "\\savegame%d.dat", ordinal);//memento
         File file = Path.of(filePath).toFile();
         boolean createNewFile = !file.exists();
         if (ordinal < 7 && createNewFile) {
-            trySavingGame(filePath, player);
+            trySavingGame(filePath, playerConfig);
             return ordinal;
         } else if (ordinal < 7) {
-            saveGameToFile(++ordinal, player);
+            saveGameToFile(++ordinal, playerConfig);
         } else {
             filePath = System.getProperty("user.dir") + "\\" + saveGameDirectory + "\\savegame1.dat";//memento
-            trySavingGame(filePath, player);
+            trySavingGame(filePath, playerConfig);
             return ordinal;
         }
         return ordinal;
     }
 
-    private void trySavingGame(String filePath, PlayerCharacter player) {
+    private void trySavingGame(String filePath, PlayerConfig playerConfig) {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath));
-            oos.writeObject(player);
+            oos.writeObject(playerConfig);
             IOUtil.display("Your glory has been recorded as history, Meister.");
         } catch (IOException e) {
             IOUtil.display("Could not save the game file with a victory, Meister.");
