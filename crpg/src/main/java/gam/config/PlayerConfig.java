@@ -5,7 +5,6 @@ import gam.client.MenuBoard;
 import gam.config.base.Config;
 import gam.model.PlayerCharacter;
 import gam.model.geo.Scene;
-import gam.provider.FlyweightProvider;
 import gam.util.Factory;
 import gam.util.IOUtil;
 
@@ -13,30 +12,23 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class PlayerConfig implements Config {
     // player configs: player char + env + more data
-    private static final PlayerConfig _DEFAULT_PLAYER_CONFIG = (PlayerConfig) Factory.get("gam.config.PlayerConfig"); // common across game servers
+    private static final PlayerConfig _DEFAULT_PLAYER_CONFIG = new PlayerConfig(); // common across game servers
     // player char
     private static final PlayerCharacter prototypePlayer = (PlayerCharacter) Factory.get("gam.model.PlayerCharacter");
-    private static ConcurrentHashMap<String,PlayerConfig> activePlayerConfigs = new ConcurrentHashMap<>();// Use it for long
+    private static ConcurrentHashMap<String, PlayerConfig> activePlayerConfigs = new ConcurrentHashMap<>();// Use it for long
     private static PlayerConfig activePlayerConfig = null; //TODO remove it soon
     private volatile PlayerCharacter activePlayer = null;
     private volatile Scene playerPosition = null; //scene: Map Block (world, ground) + Geospatial Coordinates (x,y,z)
     // tools
-    private GameClient gameClient = null;
-    private MenuBoard menuBoard = null;
-
-    {
-        activePlayerConfig = FlyweightProvider.getDefaultConfig("PlayerConfig");// from file 'game.config'. // (PlayerConfig) Factory.get("gam.config.PlayerConfig", PlayerCharacter.class); //TODO
-        if (null == activePlayerConfig) {
-            activePlayerConfig = (PlayerConfig) Factory.get("PlayerConfig"); //creating anew
-            playerPosition = new Scene(); //scene: Map Block (world, ground) + Geospatial Coordinates (x,y,z)
-        }
-    }
+    private transient GameClient gameClient = null;
+    private transient MenuBoard menuBoard = null;
 
     public static PlayerConfig getDefaultConfig() {
         return _DEFAULT_PLAYER_CONFIG;
     }
 
     public static PlayerConfig getActivePlayerConfig(String playerCharacterName) {
+        if (null == activePlayerConfigs || activePlayerConfigs.isEmpty()) return _DEFAULT_PLAYER_CONFIG;
         return activePlayerConfigs.get(playerCharacterName);
     }
 
@@ -79,9 +71,8 @@ public final class PlayerConfig implements Config {
         return activePlayer;
     }
 
-
-
     public Scene getPlayerPosition() {
+        if (null == playerPosition) playerPosition = (Scene) Factory.get("gam.model.geo.Scene");
         return playerPosition;
     }
 

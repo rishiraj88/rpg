@@ -21,8 +21,8 @@ public abstract class GameProvider {
         // Config with respect to player to pull in. Recommended to use for loading a savegame
         if (null == playerConfig) {
             playerConfig = PlayerConfig.getDefaultConfig();
-
         } else {
-          ;}
+            ;
+        }
     }
 }

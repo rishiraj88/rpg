@@ -17,14 +17,11 @@ public final class GameServer {
         if (savedGames.contains("0")) {
             promptToLoadSavegames += "Select your previously saved game out of " + Arrays.toString(savedGames.toCharArray()) + " to load ELSE ";
         } //in savegame map: binary "000000".."111111"
-            IOUtil.display(promptToLoadSavegames + " Press 9 to start a new game: ");
-            // 8 : sentinel for any failure while attempting to load a game
-            if (8 == loadGame(IOUtil.readLine())) {
-                new Thread(() -> initGamePlay()).start();
-            }
-            //advertise the server
-            //openPassivelyForClients();//extension possibility
-
+        IOUtil.display(promptToLoadSavegames + " Press 9 to start a new game: ");
+        // 8 : sentinel for any failure while attempting to load a game
+        if (8 == loadGame(IOUtil.readLine())) {
+            new Thread(() -> initGamePlay()).start();
+        }
     }
 
     private int loadGame(String savegameOrdinal) {

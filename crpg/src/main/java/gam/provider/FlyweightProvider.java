@@ -22,33 +22,30 @@ public final class FlyweightProvider {
     FlyweightProvider(String configFileName) {
         //read config file, load data
         String filePath = System.getProperty("user.dir") + configFileName;
-        System.out.println("filepath: "+filePath);
+        System.out.println("filepath: " + filePath);
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
             defaultConfig = (ConcurrentHashMap<String, Object>) ois.readObject();
-            // PlayerConfig
+            // PlayerConfig??
         } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Missing some config objects in file 'game.config'");
+            System.out.println("IOException: Missing some config objects in file 'game.config'");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-//        defaultConfig.put("FULL_GAME_MAP", new GameMap());//TODO
+        //defaultConfig.put("FULL_GAME_MAP", new GameMap());//??
     }
 
     public FlyweightProvider() {//?? for heavy load conditions
         //read config file, load data out of pre-set config file.
         this("\\game.config");
     }
-public static <T extends Config> T getDefaultConfig(String configKey) {
+
+    public static <T extends Config> T getDefaultConfig(String configKey) {
         return (T) defaultConfig.get(configKey);
-}
+    }
+
     public static Object get(String key) {
         return defaultConfig.get(key);
     }
-
-    /*public static gam.config.PlayerConfig getPlayerConfig() {
-        return PlayerConfig.getConfig();
-    }*/
 
     /*public static WieldConfig getWieldConfig() {return WieldConfig.getConfig();}*/ //??
     public SavegameProvider getSavegameProvider() {

@@ -19,13 +19,14 @@ public class Commander {
             try { //WASD keys for gaming
                 char c = (char) System.in.readNBytes(1)[0];
                 switch (c) {
-                    case 'W', 'w' ->playerConfig.moveNorthSouthAndEastWest((short) 1, (short) 0);
+                    case 'W', 'w' -> playerConfig.moveNorthSouthAndEastWest((short) 1, (short) 0);
                     case 'D', 'd' -> playerConfig.moveNorthSouthAndEastWest((short) 0, (short) 1);
                     case 'S', 's' -> playerConfig.moveNorthSouthAndEastWest((short) -1, (short) 0);
                     case 'A', 'a' -> playerConfig.moveNorthSouthAndEastWest((short) 0, (short) -1);
                     case 'F', 'f' -> playerConfig.fight();
                     case 'X', 'x' -> gameClient.getSavegameProvider().saveGame(playerConfig);
-                    case '\n' -> {}
+                    case '\n' -> {
+                    }
                     case 'q' -> System.exit(0);
                     default ->
                             IOUtil.display("invalid command. Please press W, A, S, D or F to play. Press X to save game.");

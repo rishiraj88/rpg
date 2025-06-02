@@ -37,7 +37,9 @@ public final class GameConfig implements Config {
 
     public Object get(String key) {
         return configMap.get(key);
-    }  @Override
+    }
+
+    @Override
     public PlayerConfig clone() throws CloneNotSupportedException {
         return (PlayerConfig) super.clone();
     }

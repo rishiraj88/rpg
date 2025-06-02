@@ -27,8 +27,7 @@ public class GameClient {
         IOUtil.display("""
                 How about naming your player character by your wish? ¯\\_( ͡° ͜ʖ ͡°)_/¯
                 Name your player as: """);
-        String playerName = "playername";
-        playerName = IOUtil.readLine();
+        String playerName = IOUtil.readLine();
         //PlayerCharacter player = SpawnNewPlayer(playerName);
         playerConfig.createNewPlayer(playerName);
     }

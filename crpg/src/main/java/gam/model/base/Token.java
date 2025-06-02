@@ -1,4 +1,3 @@
 package gam.model.base;
 
-interface Token {
-}
+interface Token {}

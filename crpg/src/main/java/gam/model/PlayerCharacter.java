@@ -26,9 +26,7 @@ public class PlayerCharacter extends BasePlayerToken {
         this.name = name;
     }
 
-
     /*public void addWield(String wieldName, short strength) {
         this.equipment.add(wieldName, strength);
     }*/ //??
-
 }
