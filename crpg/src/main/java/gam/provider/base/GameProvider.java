@@ -17,13 +17,12 @@ public abstract class GameProvider {
         IOUtil.display("Welcome to the rampage! Scene will be presented soon...");
     }
 
-    public void initPlayer(PlayerConfig playerConfig, String playerName) {
+    public void initPlayer(PlayerConfig playerConfig) {
         // Config with respect to player to pull in. Recommended to use for loading a savegame
         if (null == playerConfig) {
             playerConfig = PlayerConfig.getDefaultConfig();
-            playerConfig.createNewPlayer(playerName);
         } else {
-            playerConfig.setPlayerName(playerName);
+            ;
         }
     }
 }

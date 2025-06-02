@@ -1,11 +1,11 @@
 package gam.client;
 
-import gam.model.PlayerCharacter;
+import gam.config.PlayerConfig;
 import gam.util.IOUtil;
 
 public class MenuBoard {
-    public static void display(PlayerCharacter player) {
-        IOUtil.display(String.format( "%s, you are in World A, Ground %d%d. You are facing due North.%n", player.getName(), player.getScene().getNsIndex(), player.getScene().getEwIndex()));
+    public void display(PlayerConfig playerConfig ) {
+        IOUtil.display(String.format( "%s, you are in World A, Ground %d%d. You are facing due North.%n", playerConfig.getPlayer().getName(), playerConfig.getPlayerPosition().getNsIndex(), playerConfig.getPlayerPosition().getEwIndex()));
         IOUtil.display("""
         W: Move forward
         S: Move backward

@@ -1,9 +1,7 @@
 package gam.client;
 
 import gam.GameServer;
-import gam.config.GameConfig;
 import gam.config.PlayerConfig;
-import gam.model.PlayerCharacter;
 import gam.provider.SavegameProvider;
 import gam.util.Factory;
 import gam.util.IOUtil;
@@ -14,18 +12,24 @@ import java.io.InputStreamReader;
 
 public class GameClient {
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    private PlayerConfig playerConfig = PlayerConfig.getDefaultConfig();
+    //tools
     private volatile GameServer gameServer = null;
     private volatile Commander commander = (Commander) Factory.get("gam.client.Commander");
     private SavegameProvider savegameProvider;
 
-    //to spawn a player token so that a player may start playing
-    public static void createNewPlayer() {
-        SpawnNewPlayer(GameConfig.getConfig().getPlayerConfig());
-        IOUtil.display(String.format("%s, a new character has been created for a win.", GameConfig.getConfig().getPlayerConfig().getPlayerName()));
+    private static void SpawnNewPlayer(PlayerConfig playerConfig) {
     }
 
-    private static void SpawnNewPlayer(PlayerConfig config) {
-        PlayerConfig.getActivePlayerConfig().createNewPlayer(config.getPlayerName());
+    //to spawn a player token so that a player may start playing
+    public void createNewPlayer() {
+        //PlayerCharacter player = SpawnNewPlayer(GameConfig.getConfig().getPlayerConfig());
+        IOUtil.display("""
+                How about naming your player character by your wish? ¯\\_( ͡° ͜ʖ ͡°)_/¯
+                Name your player as: """);
+        String playerName = IOUtil.readLine();
+        //PlayerCharacter player = SpawnNewPlayer(playerName);
+        playerConfig.createNewPlayer(playerName);
     }
 
     // A Parameter 'short serverPort' may allow for connecting to one of many game servers running.
@@ -51,13 +55,14 @@ public class GameClient {
             throw new RuntimeException(e);
         }
         //present menus (scene info and available actions)
-        MenuBoard.display(GameConfig.getConfig().getPlayerConfig().getPlayer());
+        MenuBoard menuBoard = (MenuBoard) playerConfig.getMenuBoard();
+        menuBoard.display(playerConfig);
         // Respond to input commands
-        initCommander(GameConfig.getConfig().getPlayerConfig().getPlayer());
+        initCommander(playerConfig);
     }
 
-    private void initCommander(PlayerCharacter player) {
-        new Commander().init(this, GameConfig.getConfig().getPlayerConfig().getPlayer());
+    private void initCommander(PlayerConfig playerConfig) {
+        new Commander().init(this, playerConfig);
     }
 
     public SavegameProvider getSavegameProvider() {
