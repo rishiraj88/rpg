@@ -16,7 +16,7 @@ public final class GameServer {
         String promptToLoadSavegames = "";
         if (savedGames.contains("0")) {
             promptToLoadSavegames += "Select your previously saved game out of " + Arrays.toString(savedGames.toCharArray()) + " to load ELSE ";
-        } //in savegame map: binary "000000".."111111"
+        } //in savegame map: binary "000000".."111111" //TODO present game numbers to choose out of to player
         IOUtil.display(promptToLoadSavegames + " Press 9 to start a new game: ");
         // 8 : sentinel for any failure while attempting to load a game
         if (8 == loadGame(IOUtil.readLine())) {
