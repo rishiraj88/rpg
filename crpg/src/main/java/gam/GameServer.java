@@ -1,23 +1,22 @@
 package gam;
 
-import gam.provider.FlyweightProvider;
 import gam.provider.NewgameProvider;
 import gam.util.Factory;
+import gam.util.Flyweight;
 import gam.util.IOUtil;
-
-import java.util.Arrays;
+import gam.util.StringUtil;
 
 public final class GameServer {
-    private final FlyweightProvider flyweightProvider = (FlyweightProvider) Factory.get("gam.provider.FlyweightProvider");
-    private volatile String savedGames = "000000"; // multiple simultaneous games not supported for now, may be supported with this map in future
+    private final Flyweight flyweight = (Flyweight) Factory.get("gam.util.Flyweight");
+    private volatile String savedGames = "111110"; // multiple simultaneous games is supported now
 
     public void initGamePlay() {
         // Display the list of available savegames to load
         String promptToLoadSavegames = "";
-        if (savedGames.contains("0")) {
-            promptToLoadSavegames += "Select your previously saved game out of " + Arrays.toString(savedGames.toCharArray()) + " to load ELSE ";
-        } //in savegame map: binary "000000".."111111" //TODO present game numbers to choose out of to player
-        IOUtil.display(promptToLoadSavegames + " Press 9 to start a new game: ");
+        //in savegame map: binary "000000".."111111" //present game numbers to choose out of to player
+        if(savedGames.contains("1"))
+        promptToLoadSavegames += "Select your previously saved game out of " + StringUtil.addDelimiter(savedGames, ',').replaceAll(",0","") + " to load ELSE ";
+        IOUtil.display(promptToLoadSavegames + "Press 9 to start a new game: ");
         // 8 : sentinel for any failure while attempting to load a game
         if (8 == loadGame(IOUtil.readLine())) {
             new Thread(() -> initGamePlay()).start();
@@ -43,6 +42,6 @@ public final class GameServer {
     }
 
     private int loadSavegame(short savegameOrdinal) {
-        return flyweightProvider.getSavegameProvider().loadGame(savegameOrdinal);
+        return flyweight.getSavegameProvider().loadGame(savegameOrdinal);
     }
 }

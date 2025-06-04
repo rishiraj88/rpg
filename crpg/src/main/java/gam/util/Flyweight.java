@@ -1,6 +1,7 @@
-package gam.provider;
+package gam.util;
 
 import gam.config.base.Config;
+import gam.provider.SavegameProvider;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,7 +12,7 @@ import java.io.ObjectInputStream;
 import java.io.OutputStreamWriter;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class FlyweightProvider {
+public final class Flyweight {
     public static final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
     public static final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     private static ConcurrentHashMap<String, Object> defaultConfig = new ConcurrentHashMap<>();
@@ -19,7 +20,7 @@ public final class FlyweightProvider {
     private final SavegameProvider savegameProvider = null;
 
     //??
-    FlyweightProvider(String configFileName) {
+    Flyweight(String configFileName) {
         //read config file, load data
         String filePath = System.getProperty("user.dir") + configFileName;
         System.out.println("filepath: " + filePath);
@@ -34,7 +35,7 @@ public final class FlyweightProvider {
         //defaultConfig.put("FULL_GAME_MAP", new GameMap());//??
     }
 
-    public FlyweightProvider() {//?? for heavy load conditions
+    public Flyweight() {//?? for heavy load conditions
         //read config file, load data out of pre-set config file.
         this("\\game.config");
     }

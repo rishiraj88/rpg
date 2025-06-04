@@ -3,9 +3,16 @@ package gam.util;
 import java.lang.reflect.InvocationTargetException;
 
 public class Factory {
-    public static Object get(String className,Class<?>... params) {
+    public static Object get(String className, Class<?>... params) {
+        return Factory.get(className, false, params);
+    }
+
+    public static Object get(String className, boolean createNew, Class<?>... params) {
         try {
-          return Class.forName(className).getConstructor(params).newInstance();
+            if (createNew) return Class.forName(className).getConstructor(params).newInstance();
+            Object singleton = Flyweight.get(className);
+            if (null == singleton) return Class.forName(className).getConstructor(params).newInstance();
+            return singleton;
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } catch (NoSuchMethodException e) {
