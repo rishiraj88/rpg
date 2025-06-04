@@ -1,14 +1,12 @@
 package gam.util;
 
-import gam.provider.FlyweightProvider;
-
 import java.io.IOException;
 import java.io.Writer;
 
 public class IOUtil {
     public static void display(Object model) {
         try {
-            Writer writer = FlyweightProvider.writer;
+            Writer writer = Flyweight.writer;
             writer.write(model.toString());
             writer.flush();
         } catch (IOException e) {
@@ -18,7 +16,7 @@ public class IOUtil {
 
     public static String readLine() {
         try {
-            String input = FlyweightProvider.reader.readLine();
+            String input = Flyweight.reader.readLine();
             return input;
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -1,13 +1,13 @@
 package gam.config;
 
 import gam.config.base.Config;
-import gam.provider.FlyweightProvider;
+import gam.util.Flyweight;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class GameConfig implements Config {
-    private static volatile GameConfig _INSTANCE = (GameConfig) FlyweightProvider.get("GameConfig"); //to keep singleton or to replicate separately per GameServer instance?
+    private static volatile GameConfig _INSTANCE = (GameConfig) Flyweight.get("GameConfig"); //to keep singleton or to replicate separately per GameServer instance?
     private volatile Map<String, Object> configMap = new ConcurrentHashMap<>();
 
     /*public static GameMap getGameMap() {
