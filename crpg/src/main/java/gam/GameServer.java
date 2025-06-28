@@ -34,7 +34,7 @@ public final class GameServer {
         } else {
             throw new IllegalStateException("Please make a choice out of: [1, 2, 3, 4, 5, 6, 9]");//TODO
         }
-        return 8; // 8 is sentinel for exception and motivates for a retry
+        return 8; // 8 is sentinel for exception and motivates the player for a retry
     }
 
     private int startNewGame() {
