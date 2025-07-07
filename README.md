@@ -1,4 +1,4 @@
-# rpg
+# Role-Playing Game with Melee Capabilities
 RPG with CLI. Let's be game!
 
 ## Functionalities implemented
