@@ -1,6 +1,10 @@
 # rpg
 RPG with CLI. Are you game for it?!
 
+## Terms
+- player: who plays and enjoys the game.
+- token / character: what moves around and fights "in the gameplay".
+
 ## Functionalities implemented
 - Player may create a character (token).
 - Player may explore a game scene (playground).
