@@ -1,5 +1,5 @@
-# rpg
-RPG with CLI. Are you game for it?!
+# Role-Playing Game with Melee Capabilities
+RPG with CLI. Let's be game!
 
 ## Terms
 - player: who plays and enjoys the game.
