@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
         //1. Initialize game server.
         Thread gameServerThread = startServer();
-        //2. Start game client and connect to server.
+        //2. Start game client and connect the client to server.
         startClient(gameServerThread);
     }
 
