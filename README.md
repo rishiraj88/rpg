@@ -1,6 +1,10 @@
 # Role-Playing Game with Melee Capabilities
 RPG with CLI. Let's be game!
 
+## Terms
+- player: who plays and enjoys the game.
+- token / character: what moves around and fights "in the gameplay".
+
 ## Functionalities implemented
 - Player may create a character (token).
 - Player may explore a game scene (playground).
