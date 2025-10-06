@@ -16,23 +16,22 @@ public final class Flyweight {
     public static final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
     public static final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     private static ConcurrentHashMap<String, Object> defaultConfig = new ConcurrentHashMap<>();
-    //private static WieldConfig wieldConfig = new WieldConfig();//??
+    //private static WieldConfig wieldConfig = new WieldConfig();//?? an optional feature for future releases
     private final SavegameProvider savegameProvider = null;
 
-    //??
     Flyweight(String configFileName) {
         //read config file, load data
         String filePath = System.getProperty("user.dir") + configFileName;
         System.out.println("filepath: " + filePath);
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
-            defaultConfig = (ConcurrentHashMap<String, Object>) ois.readObject();
-            // PlayerConfig??
+            defaultConfig = (ConcurrentHashMap<String, Object>) ois.readObject(); // static across gameplays and clients
+            // PlayerConfig?? specific to individual gameplays and clients
         } catch (IOException e) {
-            System.out.println("IOException: Missing some config objects in file 'game.config'");
+            System.out.println("IOException: Missing some game config objects.");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        //defaultConfig.put("FULL_GAME_MAP", new GameMap());//??
+        //defaultConfig.put("FULL_GAME_MAP", new GameMap());//?? useful when a map is required
     }
 
     public Flyweight() {//?? for heavy load conditions

@@ -1,5 +1,6 @@
 package gam.provider;
 
+import gam.Main;
 import gam.config.GameConfig;
 import gam.config.PlayerConfig;
 import gam.provider.base.GameProvider;
@@ -44,8 +45,7 @@ public final class SavegameProvider extends GameProvider {
     public int saveGame(PlayerConfig playerConfig) {//TODO to implement with PlayerConfig parameter type
         //Map "111100" may also be used, alternatively.
         IOUtil.display("Your wish to save the warrior history as SAVEGAME [1, 2, 3, 4, 5 or 6]: ");
-        //int savegameOrdinal = Integer.parseInt(IOUtil.readLine());// valid range: [1,6] //TODO
-        int savegameOrdinal = 1;// valid range: [1,6]
+        IOUtil.readLine();int savegameOrdinal = Integer.parseInt(IOUtil.readLine());// valid range: [1,6]
         GameConfig.getConfig().set("playerName", playerConfig.getPlayer().getName());
         return saveGameToFile(savegameOrdinal, playerConfig);
     }
@@ -72,9 +72,15 @@ public final class SavegameProvider extends GameProvider {
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath));
             oos.writeObject(playerConfig);
             IOUtil.display("Your glory has been recorded as history, Meister.");
+            promptToStartNewGame();
         } catch (IOException e) {
             e.printStackTrace();
             IOUtil.display("Could not save the game file with a victory, Meister.");
         }
     }
+
+    private void promptToStartNewGame() {
+        Main.startClient(Main.startServer());
+    }
+
 }
