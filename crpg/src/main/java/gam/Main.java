@@ -11,14 +11,14 @@ public class Main {
         startClient(gameServerThread);
     }
 
-    static Thread startServer() {
+    public static Thread startServer() {
         GameServer gameServer = (GameServer) Factory.get("gam.GameServer", true);
         Thread gameServerThread = new Thread(() -> gameServer.initGamePlay());
         gameServerThread.start();
         return gameServerThread;
     }
 
-    static void startClient(Thread gameServerThread) {
+    public static void startClient(Thread gameServerThread) {
         Thread gameClientThread = new Thread(() -> {
             try {
                 gameServerThread.join();
