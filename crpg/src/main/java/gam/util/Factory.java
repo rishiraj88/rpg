@@ -8,21 +8,23 @@ public class Factory {
     }
 
     public static Object get(String className, boolean createNew, Class<?>... params) {
+        Object singleton = new Object();
+        
         try {
-            if (createNew) return Class.forName(className).getConstructor(params).newInstance();
-            Object singleton = Flyweight.get(className);
-            if (null == singleton) return Class.forName(className).getConstructor(params).newInstance();
+            if (createNew) {
+                return Class.forName(className).getConstructor(params).newInstance();
+            }
+
+            singleton = Flyweight.get(className);
+            if (null == singleton) {
+                return Class.forName(className).getConstructor(params).newInstance();
+            }
             return singleton;
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+        } catch (ClassNotFoundException ex) {
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                | NoSuchMethodException e) {
+            e.printStackTrace();
         }
+        return singleton;
     }
 }

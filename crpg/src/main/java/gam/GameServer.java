@@ -16,7 +16,7 @@ public final class GameServer {
         //in savegame map: binary "000000".."111111" //present game numbers to choose out of to player
         if(savedGames.contains("1"))
         promptToLoadSavegames += "Select your previously saved game out of " + StringUtil.addDelimiter(savedGames, ',').replaceAll(",0","") + " to load ELSE ";
-        IOUtil.display(promptToLoadSavegames + "Press 9 to start a new game: ");
+        IOUtil.display(promptToLoadSavegames + "Press 9 to start a new game OR 0 to exit: ");
         // 8 : sentinel for any failure while attempting to load a game
         if (8 == loadGame(IOUtil.readLine())) {
             new Thread(() -> initGamePlay()).start();
@@ -24,7 +24,8 @@ public final class GameServer {
     }
 
     private int loadGame(String savegameOrdinal) {
-        if ("9".equals(savegameOrdinal)) { //9 : new game with default setup to load
+        if("0".equals(savegameOrdinal)) System.exit(0);
+        else if ("9".equals(savegameOrdinal)) { //9 : new game with default setup to load
             if (9 == startNewGame()) { // plot and start new game
                 IOUtil.display("New game has been loaded. Survive the adventure! ᕕ(⌐■_■)ᕗ ♪♬");
                 return 9;
@@ -32,7 +33,7 @@ public final class GameServer {
         } else if (savegameOrdinal.length() == 1 && "123456".contains(savegameOrdinal)) { // load a saved game
             return loadSavegame(Short.parseShort(savegameOrdinal));
         } else {
-            throw new IllegalStateException("Please make a choice out of: [1, 2, 3, 4, 5, 6, 9]");//TODO
+            throw new IllegalStateException("Please make a choice out of: [1, 2, 3, 4, 5, 6, 9, 0]");//TODO
         }
         return 8; // 8 is sentinel for exception and motivates the player for a retry
     }
