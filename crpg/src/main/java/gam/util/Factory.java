@@ -15,6 +15,7 @@ public class Factory {
                 return Class.forName(className).getConstructor(params).newInstance();
             }
 
+            //retrieve the existing instance
             singleton = Flyweight.get(className);
             if (null == singleton) {
                 return Class.forName(className).getConstructor(params).newInstance();

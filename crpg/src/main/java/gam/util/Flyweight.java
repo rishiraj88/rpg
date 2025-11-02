@@ -22,12 +22,14 @@ public final class Flyweight {
     Flyweight(String configFileName) {
         //read config file, load data
         String filePath = System.getProperty("user.dir") + configFileName;
-        System.out.println("filepath: " + filePath);
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
-            defaultConfig = (ConcurrentHashMap<String, Object>) ois.readObject(); // static across gameplays and clients
+        IO.println("filepath: " + filePath);
+        try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(filePath))) {
+            var configFromFile = objectInputStream.readObject();
+            defaultConfig = configFromFile instanceof ConcurrentHashMap ? (ConcurrentHashMap<String, Object>) configFromFile : defaultConfig; // static across gameplays and clients
+
             // PlayerConfig?? specific to individual gameplays and clients
         } catch (IOException e) {
-            System.out.println("IOException: Missing some game config objects.");
+            IO.println("IOException: Missing some game config objects.");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -43,8 +45,8 @@ public final class Flyweight {
         return (T) defaultConfig.get(configKey);
     }
 
-    public static Object get(String key) {
-        return defaultConfig.get(key);
+    public static Object get(String identifier) {
+        return defaultConfig.get(identifier);
     }
 
     /*public static WieldConfig getWieldConfig() {return WieldConfig.getConfig();}*/ //??
