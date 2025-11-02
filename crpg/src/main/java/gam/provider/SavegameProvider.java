@@ -32,11 +32,11 @@ public final class SavegameProvider extends GameProvider {
             return savegameOrdinal;
         } catch (IOException e) {
             IOUtil.display("Failed to load the SAVEGAME " + savegameOrdinal + ".");
-            e.printStackTrace();
+            //e.printStackTrace();
             return 8;
         } catch (ClassNotFoundException e) {
             IOUtil.display("There is a mismatch between savegame data and game models. Use another savegame or start a new game.");
-            e.printStackTrace();
+            //e.printStackTrace();
             return 8;
         }
     }

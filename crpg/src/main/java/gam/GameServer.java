@@ -14,12 +14,13 @@ public final class GameServer {
         // Display the list of available savegames to load
         String promptToLoadSavegames = "";
         //in savegame map: binary "000000".."111111" //present game numbers to choose out of to player
-        if(savedGames.contains("1"))
-        promptToLoadSavegames += "Select your previously saved game out of " + StringUtil.addDelimiter(savedGames, ',').replaceAll(",0","") + " to load ELSE ";
-        IOUtil.display(promptToLoadSavegames + "Press 9 to start a new game OR 0 to exit: ");
-        // 8 : sentinel for any failure while attempting to load a game
+        if(savedGames.contains("1")) {
+            promptToLoadSavegames += "Select your previously saved game out of " + StringUtil.addDelimiter(savedGames, ',').replaceAll(",0", "") + " to load ELSE ";
+            IOUtil.display(promptToLoadSavegames + "Press 9 to start a new game OR 0 to exit: ");
+            // 8 : sentinel for any failure while attempting to load a game
+        }
         if (8 == loadGame(IOUtil.readLine())) {
-            new Thread(() -> initGamePlay()).start();
+            new Thread(this::initGamePlay).start();
         }
     }
 
